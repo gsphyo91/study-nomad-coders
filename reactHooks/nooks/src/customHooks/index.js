@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // useInput
 export const useInput = (initialValue, max) => {
@@ -28,13 +28,13 @@ export const useInput = (initialValue, max) => {
 export const useTabs = (initialTab, allTabs) => {
   const [currentIndex, setCurrentIndex] = useState(initialTab);
 
-  if(!allTabs || !Array.isArray(allTabs)){
-    return ;
-  } 
+  if (!allTabs || !Array.isArray(allTabs)) {
+    return;
+  }
 
   return {
     currentItem: allTabs[currentIndex],
-    changeItem: setCurrentIndex
+    changeItem: setCurrentIndex,
   };
 };
 
@@ -46,4 +46,19 @@ export const useTitle = (initialTitle) => {
   };
   useEffect(updateTitle, [title]);
   return setTitle;
-}
+};
+
+export const useClick = (onClick) => {
+  const element = useRef();
+  useEffect(() => {
+    if (element.current) {
+      element.current.addEventListener("click", onClick);
+    }
+    return () => {
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    };
+  }, []);
+  return element;
+};
