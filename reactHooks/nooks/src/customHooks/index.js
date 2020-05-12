@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+// useInput
 export const useInput = (initialValue, max) => {
   const [value, setValue] = useState(initialValue);
   const onChange = (event) => {
@@ -23,6 +24,7 @@ export const useInput = (initialValue, max) => {
   return { value, onChange };
 };
 
+// useTabs
 export const useTabs = (initialTab, allTabs) => {
   const [currentIndex, setCurrentIndex] = useState(initialTab);
 
@@ -35,3 +37,13 @@ export const useTabs = (initialTab, allTabs) => {
     changeItem: setCurrentIndex
   };
 };
+
+export const useTitle = (initialTitle) => {
+  const [title, setTitle] = useState(initialTitle);
+  const updateTitle = () => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle.innerText = title;
+  };
+  useEffect(updateTitle, [title]);
+  return setTitle;
+}
