@@ -7,6 +7,7 @@ const UseTitle = () => {
   return (
     <div>
       <p>useTitle</p>
+      <p>탭의 Title 확인</p>
     </div>
   )
 }
