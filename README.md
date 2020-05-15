@@ -8,3 +8,6 @@ React Context API
 
 ## React Hooks [link](reactHooks)
 React Hooks
+
+## Typescript [link](nomad-ts)
+Typescript
