@@ -8,6 +8,7 @@ import UsePreventLeave from "./components/UsePreventLeave";
 import UseBeforeLeave from "./components/UseBeforeLeave";
 import UseFadeIn from "./components/UseFadeIn";
 import UseNetwork from "./components/UseNetwork";
+import { useScroll } from "./customHooks";
 
 const App = () => {
   return (
@@ -29,6 +30,8 @@ const App = () => {
       <UseFadeIn />
       <hr />
       <UseNetwork />
+      <hr />
+      <useScroll />
       <hr />
     </div>
   );

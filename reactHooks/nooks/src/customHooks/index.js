@@ -149,3 +149,7 @@ export const useNetwork = (onChange) => {
   });
   return status;
 };
+
+
+// useScroll
+export const useScroll = () => {};
