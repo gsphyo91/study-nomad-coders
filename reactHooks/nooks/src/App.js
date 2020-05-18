@@ -8,7 +8,10 @@ import UsePreventLeave from "./components/UsePreventLeave";
 import UseBeforeLeave from "./components/UseBeforeLeave";
 import UseFadeIn from "./components/UseFadeIn";
 import UseNetwork from "./components/UseNetwork";
-import { useScroll } from "./customHooks";
+import UseScroll from "./components/UseScroll";
+import UseFullScreen from "./components/UseFullScreen";
+import UseNotification from "./components/UseNotification";
+import UseAxios from "./components/UseAxios";
 
 const App = () => {
   return (
@@ -31,7 +34,13 @@ const App = () => {
       <hr />
       <UseNetwork />
       <hr />
-      <useScroll />
+      <UseScroll />
+      <hr />
+      <UseFullScreen />
+      <hr />
+      <UseNotification />
+      <hr />
+      <UseAxios />
       <hr />
     </div>
   );

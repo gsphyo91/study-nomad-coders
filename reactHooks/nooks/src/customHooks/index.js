@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import defaultAxios from "axios";
 
 // useInput
 export const useInput = (initialValue, max) => {
@@ -134,7 +135,7 @@ export const useFadeIn = (duration = 1, delay = 1) => {
 export const useNetwork = (onChange) => {
   const [status, setStatus] = useState(navigator.onLine);
   const handleChange = () => {
-    if(typeof onChange !== "function"){
+    if (typeof onChange !== "function") {
       onChange(navigator.onLine);
     }
     setStatus(navigator.onLine);
@@ -150,6 +151,115 @@ export const useNetwork = (onChange) => {
   return status;
 };
 
-
 // useScroll
-export const useScroll = () => {};
+export const useScroll = () => {
+  const [state, setState] = useState({
+    x: 0,
+    y: 0,
+  });
+  const onScroll = () => {
+    // console.log("y ", window.scrollY, "x ", window.scrollX);
+    setState({ y: window.scrollY, x: window.scrollX });
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return state;
+};
+
+// useFullScreen
+export const useFullScreen = (callback) => {
+  const element = useRef();
+  const runCb = (isFull) => {
+    if (callback && typeof callback === "function") {
+      callback(isFull);
+    }
+  };
+  const triggerFull = () => {
+    if (element.current) {
+      if (element.current.requestFullscreen) {
+        element.current.requestFullscreen();
+      } else if (element.current.mozRequestFullscreen) {
+        element.current.mozRequestFullscreen();
+      } else if (element.current.webkitRequestFullscreen) {
+        element.current.webkitRequestFullscreen();
+      } else if (element.current.msRequestFullscreen) {
+        element.current.msRequestFullscreen();
+      }
+      runCb(true);
+    }
+  };
+  const exitFull = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    runCb(false);
+  };
+  return { element, triggerFull, exitFull };
+};
+
+// useNotification
+export const useNotification = (title, options) => {
+  if (!("Notification" in window)) {
+    return;
+  }
+  const fireNotif = () => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          new Notification(title, options);
+        } else {
+          return;
+        }
+      });
+    } else {
+      new Notification(title, options);
+    }
+  };
+  return fireNotif;
+};
+
+// useAxios
+export const useAxios = (opts, axiosInstance = defaultAxios) => {
+  const [state, setState] = useState({
+    loading: true,
+    error: null,
+    data: null,
+  });
+  const [trigger, setTrigger] = useState(0);
+  const refetch = () => {
+    setState({
+      ...state,
+      loading: true,
+    });
+    setTrigger(new Date());
+  };
+  useEffect(() => {
+    if (!opts.url) {
+      return;
+    }
+    axiosInstance(opts)
+      .then((data) => {
+        setState({
+          ...state,
+          loading: false,
+          data,
+        });
+      })
+      .catch((error) => {
+        setState({
+          ...state,
+          loading: false,
+          error,
+        });
+      });
+  }, [trigger]);
+  return { ...state, refetch };
+};
